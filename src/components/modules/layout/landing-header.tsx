@@ -1,19 +1,23 @@
 "use client";
 
 import { ProjectUrls } from "@/const/url";
-import { cn } from "@nextui-org/react";
+import { CurrentUserData } from "@/types/user";
+import { Button, cn } from "@nextui-org/react";
 import { Handshake } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ComponentPropsWithoutRef, useState } from "react";
 import { HamburgerButton } from "./hamburger-button";
+import { UserDropdown } from "./user-dropdown";
 
 const MOBILE_MENU_ID = "mobile-menu";
 
-type LandingHeaderProps = ComponentPropsWithoutRef<"header">;
+type LandingHeaderProps = ComponentPropsWithoutRef<"header"> & {
+  user: CurrentUserData | null;
+};
 
 export const LandingHeader = (props: LandingHeaderProps) => {
-  const { className, ...rest } = props;
+  const { user, className, ...rest } = props;
   const pathname = usePathname();
 
   const [isMenuOpened, setIsMenuOpened] = useState(false);
@@ -21,6 +25,7 @@ export const LandingHeader = (props: LandingHeaderProps) => {
   const landingNavigationLinks = [
     { label: "Home", href: ProjectUrls.home },
     { label: "Road Map", href: ProjectUrls.roadMap },
+    ...(user ? [{ label: "Dashboard", href: ProjectUrls.dashboard }] : []),
   ];
 
   return (
@@ -40,7 +45,25 @@ export const LandingHeader = (props: LandingHeaderProps) => {
               Client-care
             </span>
           </Link>
-          <div className="flex items-center lg:order-2">
+          <div className="flex items-center lg:order-2 gap-1">
+            {!user && (
+              <>
+                <Button as={Link} href={ProjectUrls.login} variant="light">
+                  Log in
+                </Button>
+
+                <Button
+                  as={Link}
+                  href={ProjectUrls.registration}
+                  variant="light"
+                >
+                  Get started
+                </Button>
+              </>
+            )}
+
+            {user && <UserDropdown user={user} />}
+
             <HamburgerButton
               isActive={isMenuOpened}
               size={"sm"}

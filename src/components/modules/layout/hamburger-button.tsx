@@ -11,6 +11,7 @@ export const HamburgerButton = (props: HamburgerButtonProps) => {
     <Button
       {...rest}
       isIconOnly
+      size="md"
       className={cn(
         "relative flex overflow-hidden items-center justify-center transform transition-all duration-200 shadow-md",
         className

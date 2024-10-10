@@ -20,7 +20,7 @@ import { useLogin } from "../use-login";
 
 const LOGIN_FORM_ID = "login-form";
 
-export const LoginPageWrapper = () => {
+export const LoginPageTemplate = () => {
   const { errors, login, isLoading } = useLogin();
   const router = useRouter();
 
@@ -42,9 +42,10 @@ export const LoginPageWrapper = () => {
         <Link
           as={NextLink}
           href={ProjectUrls.home}
+          size="sm"
           className="-order-1 !justify-start gap-2"
         >
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="w-4 h-4" />
           Back to Home
         </Link>
       </CardHeader>
@@ -66,13 +67,14 @@ export const LoginPageWrapper = () => {
         <Link
           as={NextLink}
           href={ProjectUrls.forgotPassword}
+          size="sm"
           className="!justify-start"
         >
           Forgot password?
         </Link>
         <Typography level="p" styling="small">
           Don’t have an account yet?{" "}
-          <Link as={NextLink} href={ProjectUrls.registration}>
+          <Link as={NextLink} size="sm" href={ProjectUrls.registration}>
             Register
           </Link>
         </Typography>

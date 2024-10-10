@@ -5,10 +5,19 @@ import Link from "next/link";
 
 const currentYear = new Date().getFullYear();
 
-export const LandingFooter = () => {
+type Props = {
+  isUserAuthenticated: boolean;
+};
+
+export const LandingFooter = (props: Props) => {
+  const { isUserAuthenticated } = props;
+
   const landingNavigationLinks = [
     { label: "Home", href: ProjectUrls.home },
     { label: "Road Map", href: ProjectUrls.roadMap },
+    ...(isUserAuthenticated
+      ? [{ label: "Dashboard", href: ProjectUrls.dashboard }]
+      : []),
   ];
 
   return (

@@ -1,69 +1,56 @@
+import { ProjectUrls } from "@/const/url";
+import { useApplicationLogout } from "@/hooks/use-logout";
+import { CurrentUserData } from "@/types/user";
+import { getUserInfo } from "@/utils/user-info";
 import {
   Avatar,
   Dropdown,
   DropdownItem,
   DropdownMenu,
+  DropdownProps,
   DropdownTrigger,
-  User,
 } from "@nextui-org/react";
+import Link from "next/link";
 
-export const UserDropdown = () => {
+type OmittedProps = Omit<DropdownProps, "children">;
+
+type Props = OmittedProps & {
+  user: CurrentUserData;
+};
+
+export const UserDropdown = (props: Props) => {
+  const { user, ...rest } = props;
+  const { logout } = useApplicationLogout();
+
   return (
-    <div className="flex items-center gap-4">
-      <Dropdown placement="bottom-end">
-        <DropdownTrigger>
-          <Avatar
-            isBordered
-            as="button"
-            className="transition-transform"
-            src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-          />
-        </DropdownTrigger>
-        <DropdownMenu aria-label="Profile Actions" variant="flat">
-          <DropdownItem key="profile" className="h-14 gap-2">
-            <p className="font-semibold">Signed in as</p>
-            <p className="font-semibold">zoey@example.com</p>
-          </DropdownItem>
-          <DropdownItem key="settings">My Settings</DropdownItem>
-          <DropdownItem key="team_settings">Team Settings</DropdownItem>
-          <DropdownItem key="analytics">Analytics</DropdownItem>
-          <DropdownItem key="system">System</DropdownItem>
-          <DropdownItem key="configurations">Configurations</DropdownItem>
-          <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-          <DropdownItem key="logout" color="danger">
-            Log Out
-          </DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
-      <Dropdown placement="bottom-start">
-        <DropdownTrigger>
-          <User
-            as="button"
-            avatarProps={{
-              isBordered: true,
-              src: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-            }}
-            className="transition-transform"
-            description="@tonyreichert"
-            name="Tony Reichert"
-          />
-        </DropdownTrigger>
-        <DropdownMenu aria-label="User Actions" variant="flat">
-          <DropdownItem key="profile" className="h-14 gap-2">
-            <p className="font-bold">Signed in as</p>
-            <p className="font-bold">@tonyreichert</p>
-          </DropdownItem>
-          <DropdownItem key="settings">My Settings</DropdownItem>
-          <DropdownItem key="team_settings">Team Settings</DropdownItem>
-          <DropdownItem key="analytics">Analytics</DropdownItem>
-          <DropdownItem key="system">System</DropdownItem>
-          <DropdownItem key="configurations">Configurations</DropdownItem>
-          <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-          <DropdownItem key="logout" color="danger">
-            Log Out
-          </DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
-    </div>
+    <Dropdown {...rest} placement="bottom">
+      <DropdownTrigger>
+        <Avatar
+          isBordered
+          as="button"
+          size="sm"
+          className="transition-transform"
+          src={user.avatarUrl || undefined}
+        />
+      </DropdownTrigger>
+      <DropdownMenu aria-label="Profile Actions" variant="flat">
+        <DropdownItem key="profile" className="h-14 gap-2">
+          <p className="font-semibold">Signed in as</p>
+          <p className="font-semibold">{getUserInfo(user)}</p>
+        </DropdownItem>
+        <DropdownItem key="dashboard" as={Link} href={ProjectUrls.dashboard}>
+          Dashboard
+        </DropdownItem>
+        <DropdownItem key="projects" as={Link} href={ProjectUrls.projects}>
+          Projects
+        </DropdownItem>
+        <DropdownItem key="settings" as={Link} href={ProjectUrls.settings}>
+          Settings
+        </DropdownItem>
+        <DropdownItem key="logout" color="danger" onClick={logout}>
+          Log Out
+        </DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
   );
 };

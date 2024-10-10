@@ -3,7 +3,7 @@ export const ProjectUrls = {
   roadMap: "/road-map",
 
   // auth
-  login: "/auth",
+  login: "/auth/login",
   registration: "/auth/registration",
   registrationVerification: "/auth/registration-verification",
   forgotPassword: "/auth/forgot-password",
