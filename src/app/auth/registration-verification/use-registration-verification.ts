@@ -1,3 +1,4 @@
+import { USER_INVITE_SEARCH_PARAMETER } from "@/const/search-params";
 import { ProjectRoutesUrls } from "@/const/url";
 import { VerificationFormValues } from "@/schemas/auth";
 import { useSignUp } from "@clerk/nextjs";
@@ -7,7 +8,14 @@ import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 
-export const useRegistrationVerification = () => {
+type Args = {
+  inviteId?: string;
+  inviteHasErrors: boolean;
+};
+
+export const useRegistrationVerification = (args: Args) => {
+  const { inviteHasErrors, inviteId } = args;
+
   const { isLoaded, signUp, setActive } = useSignUp();
   const [errors, setErrors] = useState<ClerkAPIError[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -16,6 +24,9 @@ export const useRegistrationVerification = () => {
   const verify = useCallback(
     async (values: VerificationFormValues) => {
       if (!isLoaded) return;
+
+      if (inviteId && inviteHasErrors)
+        return setErrors([{ message: "Invalid invite", code: "123" }]);
 
       const { code } = values;
 
@@ -30,7 +41,12 @@ export const useRegistrationVerification = () => {
         if (completeSignUp.status === "complete") {
           await setActive({ session: completeSignUp.createdSessionId });
           toast.success("You are successfully registered in app");
-          router.push(ProjectRoutesUrls.auth);
+
+          const redirectUrl = inviteId
+            ? `${ProjectRoutesUrls.auth}?${USER_INVITE_SEARCH_PARAMETER}=${inviteId}`
+            : ProjectRoutesUrls.auth;
+
+          router.push(redirectUrl);
         } else {
           // If the status is not complete, check why. User may need to
           // complete further steps.
@@ -45,7 +61,7 @@ export const useRegistrationVerification = () => {
         setIsLoading(false);
       }
     },
-    [isLoaded, router, setActive, signUp]
+    [inviteHasErrors, inviteId, isLoaded, router, setActive, signUp]
   );
 
   return { errors, verify, isLoading };

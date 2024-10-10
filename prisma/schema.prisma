@@ -21,6 +21,8 @@ model User {
   lastName  String? @map("last_name")
   position  String?
 
+  inviteId String? @default(cuid()) @map("invite_id")
+
   role UserRoles @default(OWNER)
 
   avatar   File?   @relation(fields: [avatarId], references: [id])

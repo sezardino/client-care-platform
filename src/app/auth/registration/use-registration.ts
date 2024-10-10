@@ -1,12 +1,21 @@
+import { USER_INVITE_SEARCH_PARAMETER } from "@/const/search-params";
 import { ProjectUrls } from "@/const/url";
 import { RegistrationFormValues } from "@/schemas/auth";
 import { useSignUp } from "@clerk/nextjs";
 import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
 import { ClerkAPIError } from "@clerk/types";
 import { useRouter } from "next/navigation";
+
 import { useState } from "react";
 
-export const useRegistration = () => {
+type Args = {
+  inviteId?: string;
+  inviteHasErrors: boolean;
+};
+
+export const useRegistration = (args: Args) => {
+  const { inviteHasErrors, inviteId } = args;
+
   const { isLoaded, signUp } = useSignUp();
   const [errors, setErrors] = useState<ClerkAPIError[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -15,6 +24,9 @@ export const useRegistration = () => {
   // Handle submission of the sign-up form
   const registration = async (values: RegistrationFormValues) => {
     if (!isLoaded) return;
+
+    if (inviteId && inviteHasErrors)
+      return setErrors([{ message: "Invalid invite", code: "123" }]);
 
     const { email, password } = values;
 
@@ -31,9 +43,11 @@ export const useRegistration = () => {
         strategy: "email_code",
       });
 
-      // Set 'verifying' true to display second form
-      // and capture the OTP code
-      router.push(ProjectUrls.registrationVerification);
+      const redirectUrl = inviteId
+        ? `${ProjectUrls.registrationVerification}?${USER_INVITE_SEARCH_PARAMETER}=${inviteId}`
+        : ProjectUrls.registrationVerification;
+
+      router.push(redirectUrl);
     } catch (err) {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
