@@ -98,8 +98,8 @@ export const ApplicationSidebar = (props: ApplicationSidebarProps) => {
                 <Button
                   as={link.href ? Link : undefined}
                   href={link.href ? link.href : undefined}
-                  variant={"ghost"}
-                  color={"secondary"}
+                  variant="light"
+                  color="default"
                   isIconOnly
                   onClick={link.onClick}
                   aria-label={link.label}
