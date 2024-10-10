@@ -11,7 +11,6 @@ export const HamburgerButton = (props: HamburgerButtonProps) => {
     <Button
       {...rest}
       isIconOnly
-      color="secondary"
       className={cn(
         "relative flex overflow-hidden items-center justify-center transform transition-all duration-200 shadow-md",
         className
@@ -20,19 +19,19 @@ export const HamburgerButton = (props: HamburgerButtonProps) => {
       <div className="flex flex-col justify-between w-[20px] h-[20px] transform transition-all duration-300 origin-center overflow-hidden">
         <div
           className={cn(
-            "bg-white h-[2px] w-7 transform transition-all duration-300 origin-left delay-100",
+            "bg-current h-[2px] w-7 transform transition-all duration-300 origin-left delay-100",
             isActive && "translate-y-6"
           )}
         />
         <div
           className={cn(
-            "bg-white h-[2px] w-7 rounded transform transition-all duration-300 delay-75",
+            "bg-current h-[2px] w-7 rounded transform transition-all duration-300 delay-75",
             isActive && "translate-y-6"
           )}
         />
         <div
           className={cn(
-            "bg-white h-[2px] w-7 transform transition-all duration-300 origin-left",
+            "bg-current h-[2px] w-7 transform transition-all duration-300 origin-left",
             isActive && "translate-y-6"
           )}
         />
@@ -45,13 +44,13 @@ export const HamburgerButton = (props: HamburgerButtonProps) => {
         >
           <div
             className={cn(
-              "absolute bg-white h-[2px] w-5 transform transition-all duration-500 rotate-0 delay-300",
+              "absolute bg-current h-[2px] w-5 transform transition-all duration-500 rotate-0 delay-300",
               isActive && "rotate-45"
             )}
           />
           <div
             className={cn(
-              "absolute bg-white h-[2px] w-5 transform transition-all duration-500 -rotate-0 delay-300",
+              "absolute bg-current h-[2px] w-5 transform transition-all duration-500 -rotate-0 delay-300",
               isActive && "-rotate-45"
             )}
           />
