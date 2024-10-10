@@ -49,16 +49,33 @@ model File {
 }
 
 model Organization {
-  id        String    @id @unique @default(cuid())
-  name      String
-  slug      String    @unique
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  deletedAt DateTime? @map("deleted_at")
+  id   String @id @unique @default(cuid())
+  name String
 
   members User[] @relation("organization-members")
   ownerId String @unique @map("owner_id")
   owner   User   @relation("organization-owner", fields: [ownerId], references: [id])
 
+  projects Project[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
   @@map("organizations")
+}
+
+model Project {
+  id   String @id @unique @default(cuid())
+  slug String
+  name String
+
+  organizationId String       @map("organization_id")
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("projects")
 }
