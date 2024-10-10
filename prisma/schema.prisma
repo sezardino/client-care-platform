@@ -51,6 +51,7 @@ model File {
 model Organization {
   id   String @id @unique @default(cuid())
   name String
+  slug String @unique
 
   members User[] @relation("organization-members")
   ownerId String @unique @map("owner_id")

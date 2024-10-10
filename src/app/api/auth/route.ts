@@ -14,6 +14,7 @@ export async function GET() {
 
   const user = await prisma.user.findUnique({
     where: { id: clerkUser.id },
+    select: { id: true, organizationId: true },
   });
 
   if (!user) {
@@ -31,6 +32,8 @@ export async function GET() {
       return redirect(ProjectUrls.registration);
     }
   }
+
+  if (!user.organizationId) return redirect(ProjectUrls.newOrganization);
 
   return redirect(ProjectUrls.home);
 }
