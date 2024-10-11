@@ -44,7 +44,7 @@ export const UserDropdown = (props: Props) => {
         <DropdownItem key="projects" as={Link} href={ProjectUrls.projects}>
           Projects
         </DropdownItem>
-        <DropdownItem key="settings" as={Link} href={ProjectUrls.settings}>
+        <DropdownItem key="settings" as={Link} href={ProjectUrls.userSettings}>
           Settings
         </DropdownItem>
         <DropdownItem key="logout" color="danger" onClick={logout}>
