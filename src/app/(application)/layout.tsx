@@ -1,4 +1,4 @@
-import { ApplicationLayout } from "@/components/layout/application-layout";
+import { ApplicationLayout } from "@/components/layout/application";
 import { ProjectUrls } from "@/const/url";
 import { redirect } from "next/navigation";
 import { PropsWithChildren } from "react";
