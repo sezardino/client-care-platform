@@ -45,7 +45,10 @@ model File {
   path       String
   fullPath   String @map("full_path")
   publicPath String @map("public_path")
-  avatar     User[]
+
+  avatar  User[]
+  logo    Organization[]
+  project Project[]
 
   @@map("files")
 }
@@ -61,6 +64,9 @@ model Organization {
 
   projects Project[]
 
+  logo   File?   @relation(fields: [logoId], references: [id])
+  logoId String? @map("logo_id")
+
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
@@ -75,6 +81,9 @@ model Project {
 
   organizationId String       @map("organization_id")
   organization   Organization @relation(fields: [organizationId], references: [id])
+
+  logo   File?   @relation(fields: [logoId], references: [id])
+  logoId String? @map("logo_id")
 
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
