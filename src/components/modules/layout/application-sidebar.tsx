@@ -48,6 +48,7 @@ const mainLinks: SidebarLink[] = [
   { label: "Dashboard", href: ProjectUrls.dashboard, icon: Grid },
   { label: "Projects", href: ProjectUrls.projects, icon: Folder },
   { label: "Users", href: ProjectUrls.users, icon: Users },
+  { label: "Settings", href: ProjectUrls.settings, icon: Settings },
 ];
 
 export const ApplicationSidebar = (props: ApplicationSidebarProps) => {
@@ -57,7 +58,7 @@ export const ApplicationSidebar = (props: ApplicationSidebarProps) => {
 
   const footerLinks = [
     { label: "Back to landing", href: ProjectUrls.home, icon: Home },
-    { label: "Settings", href: ProjectUrls.settings, icon: Settings },
+    { label: "User Settings", href: ProjectUrls.settings, icon: Settings },
     { label: "Log Out", onClick: logout, icon: LogOut },
   ];
 
@@ -98,8 +99,8 @@ export const ApplicationSidebar = (props: ApplicationSidebarProps) => {
                 <Button
                   as={link.href ? Link : undefined}
                   href={link.href ? link.href : undefined}
-                  variant={"ghost"}
-                  color={"secondary"}
+                  variant="light"
+                  color="default"
                   isIconOnly
                   onClick={link.onClick}
                   aria-label={link.label}

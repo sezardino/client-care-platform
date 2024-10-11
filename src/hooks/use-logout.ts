@@ -10,8 +10,8 @@ export const useApplicationLogout = () => {
     try {
       signOut({ redirectUrl: ProjectUrls.home });
       toast.success("You are logged out successfully");
-    } catch (error) {
-      toast.error("Something went wrong", {});
+    } catch {
+      toast.error("Something went wrong");
     }
   }, [signOut]);
 

@@ -1,4 +1,5 @@
 import { isServer, QueryClient } from "@tanstack/react-query";
+import { cache } from "react";
 
 const makeQueryClient = () => {
   return new QueryClient({
@@ -21,3 +22,5 @@ export const getQueryClient = () => {
     return browserQueryClient;
   }
 };
+
+export const getQueryClientForHydration = cache(() => new QueryClient());

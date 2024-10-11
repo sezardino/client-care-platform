@@ -1,6 +1,7 @@
 import { ToastInner } from "@/components/ui/toast-inner";
 import { ProjectUrls } from "@/const/url";
 import { useServerMutation } from "@/libs/react-query/helpers";
+import { NewOrganizationFormValues } from "@/schemas/organization";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { createOrganization } from "../actions/create-organization";
@@ -9,7 +10,16 @@ export const useCreateOrganizationMutation = () => {
   const router = useRouter();
 
   return useServerMutation({
-    mutationFn: createOrganization,
+    mutationFn: async (values: NewOrganizationFormValues) => {
+      const { logo, name, extra } = values;
+
+      const formData = new FormData();
+      formData.set("name", name);
+      formData.set("logo", logo);
+      if (extra) formData.set("extra", extra);
+
+      return createOrganization(formData);
+    },
     onSuccess: () => {
       toast.success(<ToastInner message="Organization created successfully" />);
       router.replace(ProjectUrls.dashboard);

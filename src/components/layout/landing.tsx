@@ -1,13 +1,20 @@
+import { CurrentUserData } from "@/types/user";
 import { PropsWithChildren } from "react";
 import { LandingFooter } from "../modules/layout/landing-footer";
 import { LandingHeader } from "../modules/layout/landing-header";
 
-export const LandingLayout = ({ children }: PropsWithChildren) => {
+type Props = PropsWithChildren & {
+  user: CurrentUserData | null;
+};
+
+export const LandingLayout = (props: Props) => {
+  const { user, children } = props;
+
   return (
     <>
-      <LandingHeader />
+      <LandingHeader user={user} />
       {children}
-      <LandingFooter />
+      <LandingFooter isUserAuthenticated={!!user} />
     </>
   );
 };

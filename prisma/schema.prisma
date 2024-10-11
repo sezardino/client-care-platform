@@ -21,6 +21,8 @@ model User {
   lastName  String? @map("last_name")
   position  String?
 
+  inviteId String? @default(cuid()) @map("invite_id")
+
   role UserRoles @default(OWNER)
 
   avatar   File?   @relation(fields: [avatarId], references: [id])
@@ -43,22 +45,54 @@ model File {
   path       String
   fullPath   String @map("full_path")
   publicPath String @map("public_path")
-  avatar     User[]
+
+  avatar  User[]
+  logo    Organization[]
+  project Project[]
 
   @@map("files")
 }
 
 model Organization {
-  id        String    @id @unique @default(cuid())
-  name      String
-  slug      String    @unique
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  deletedAt DateTime? @map("deleted_at")
+  id   String @id @unique @default(cuid())
+  slug String @unique
+
+  name  String
+  extra String?
 
   members User[] @relation("organization-members")
   ownerId String @unique @map("owner_id")
   owner   User   @relation("organization-owner", fields: [ownerId], references: [id])
 
+  projects Project[]
+
+  logo   File?   @relation(fields: [logoId], references: [id])
+  logoId String? @map("logo_id")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
   @@map("organizations")
+}
+
+model Project {
+  id    String  @id @unique @default(cuid())
+  slug  String
+  name  String
+  extra String?
+
+  description String?
+
+  organizationId String       @map("organization_id")
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  logo   File?   @relation(fields: [logoId], references: [id])
+  logoId String? @map("logo_id")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("projects")
 }

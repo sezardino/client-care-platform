@@ -3,7 +3,7 @@ export const ProjectUrls = {
   roadMap: "/road-map",
 
   // auth
-  login: "/auth",
+  login: "/auth/login",
   registration: "/auth/registration",
   registrationVerification: "/auth/registration-verification",
   forgotPassword: "/auth/forgot-password",
@@ -11,10 +11,11 @@ export const ProjectUrls = {
 
   // organization
   dashboard: "/organization",
-  users: "/users",
-  projects: "/projects",
+  users: "/organization/users",
+  projects: "/organization/projects",
+  settings: "/organization/settings",
 
-  settings: "/settings",
+  userSettings: "/settings",
 };
 
 export const ProjectRoutesUrls = {
