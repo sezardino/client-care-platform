@@ -2,13 +2,12 @@
 
 import { ProjectUrls } from "@/const/url";
 import { CurrentUserData } from "@/types/user";
-import { Button, cn } from "@nextui-org/react";
+import { cn } from "@nextui-org/react";
 import { Handshake } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ComponentPropsWithoutRef, useState } from "react";
 import { HamburgerButton } from "./hamburger-button";
-import { UserDropdown } from "./user-dropdown";
 
 const MOBILE_MENU_ID = "mobile-menu";
 
@@ -46,7 +45,7 @@ export const LandingHeader = (props: LandingHeaderProps) => {
             </span>
           </Link>
           <div className="flex items-center lg:order-2 gap-1">
-            {!user && (
+            {/* {!user && (
               <>
                 <Button as={Link} href={ProjectUrls.login} variant="light">
                   Log in
@@ -62,7 +61,7 @@ export const LandingHeader = (props: LandingHeaderProps) => {
               </>
             )}
 
-            {user && <UserDropdown user={user} />}
+            {user && <UserDropdown user={user} />} */}
 
             <HamburgerButton
               isActive={isMenuOpened}
