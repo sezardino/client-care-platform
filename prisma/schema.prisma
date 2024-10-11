@@ -55,8 +55,10 @@ model File {
 
 model Organization {
   id   String @id @unique @default(cuid())
-  name String
   slug String @unique
+
+  name  String
+  extra String?
 
   members User[] @relation("organization-members")
   ownerId String @unique @map("owner_id")
@@ -75,9 +77,12 @@ model Organization {
 }
 
 model Project {
-  id   String @id @unique @default(cuid())
-  slug String
-  name String
+  id    String  @id @unique @default(cuid())
+  slug  String
+  name  String
+  extra String?
+
+  description String?
 
   organizationId String       @map("organization_id")
   organization   Organization @relation(fields: [organizationId], references: [id])
