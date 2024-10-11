@@ -1,70 +1,97 @@
 "use server";
 
 import { prisma } from "@/libs/prisma";
+import {
+  getFilePublicPath,
+  uploadFileToStorage,
+} from "@/libs/supabase/storage";
 import { NewOrganizationFormSchema } from "@/schemas/organization";
 import { ServerActionResponse, SuccessResponse } from "@/types/base";
+import { stringToSlug } from "@/utils/string-to-slug";
 import { zodValidateAndFormatErrors } from "@/utils/zod";
 import { auth } from "@clerk/nextjs/server";
+import { checkIfOrganizationExist } from "./check-if-organization-exist";
+import { checkIfUserHasNoOrganization } from "./check-if-user-has-no-organizations";
 
 export const createOrganization = async (
   args: unknown
 ): Promise<ServerActionResponse<SuccessResponse>> => {
   const { userId } = auth();
 
+  if (!(args instanceof FormData)) return { message: "Invalid input" };
+
   if (!userId) return { message: "Unauthorized" };
+
+  const dataToValidate = {
+    name: args.get("name"),
+    logo: args.get("logo"),
+    extra: args.get("extra") || undefined,
+  };
 
   const validationResponse = zodValidateAndFormatErrors(
     NewOrganizationFormSchema,
-    args
+    dataToValidate
   );
 
   if (!validationResponse.success)
     return { message: "Invalid input", errors: validationResponse.errors };
 
-  // return { success: true };
+  const { logo, name, extra } = validationResponse.data;
+
+  const userHasNoOrganizationResponse = await checkIfUserHasNoOrganization(
+    userId
+  );
+
+  if ("message" in userHasNoOrganizationResponse)
+    return userHasNoOrganizationResponse;
+
+  const slugFromName = stringToSlug(name);
+  const organizationExistResponse = await checkIfOrganizationExist(
+    slugFromName
+  );
+
+  if ("message" in organizationExistResponse) return organizationExistResponse;
 
   try {
-    const neededUser = await prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        organizationId: true,
-        role: true,
-        owner: { select: { id: true } },
+    const newOrganization = await prisma.organization.create({
+      data: {
+        name,
+        extra,
+        slug: slugFromName,
+        owner: { connect: { id: userId } },
+        members: { connect: { id: userId } },
       },
-    });
-
-    console.log(neededUser);
-
-    if (!neededUser) return { message: "User not found" };
-
-    const { id, organizationId, owner, role } = neededUser;
-    const { name, slug } = validationResponse.data;
-
-    if (role !== "OWNER") return { message: "Access denied" };
-    if (!!organizationId || !!owner?.id)
-      return { message: "This user already have organization" };
-
-    const organizationWithSameSlug = await prisma.organization.findUnique({
-      where: { slug },
       select: { id: true },
     });
 
-    if (!!organizationWithSameSlug?.id)
-      return { message: "This slug already in use" };
+    const uploadResponse = await uploadFileToStorage(
+      logo,
+      `organization/${newOrganization.id}/logo`
+    );
 
-    await prisma.organization.create({
+    if (!uploadResponse || uploadResponse.error) {
+      console.log(uploadResponse.error);
+
+      return {
+        message: "Something went wrong wen try to upload a new avatar image",
+      };
+    }
+
+    await prisma.organization.update({
+      where: { id: newOrganization.id },
       data: {
-        name,
-        slug,
-        owner: { connect: { id } },
-        members: { connect: { id } },
+        logo: {
+          create: {
+            ...uploadResponse.data,
+            publicPath: getFilePublicPath(uploadResponse.data.path),
+          },
+        },
       },
     });
 
     return { success: true };
   } catch (error) {
-    console.log("error", error);
-    return { message: "There was error when try to get current user data" };
+    console.log(error);
+    return { message: "There was error when try to create new organization" };
   }
 };

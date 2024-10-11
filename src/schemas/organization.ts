@@ -1,18 +1,40 @@
+import { ACCEPTED_IMAGE_TYPES } from "@/const/base";
 import { z } from "zod";
+
+const mbToBites = (mb: number) => mb * 1024 * 1024;
+
+const MAX_AVATAR_SIZE_MB = 5;
+const MAX_FILE_SIZE = mbToBites(MAX_AVATAR_SIZE_MB);
+
+const MAX_ORGANIZATION_NAME_LENGTH = 50;
+const MAX_ORGANIZATION_EXTRA_LENGTH = 50;
 
 export const NewOrganizationFormSchema = z.object({
   name: z
-    .string({ required_error: "Organization name is required" })
+    .string({
+      required_error: "Organization name is required",
+    })
     .min(1, { message: "Name must not be empty" })
-    .max(50, { message: "Name must not exceed 50 characters" }),
-  slug: z
-    .string({ required_error: "Organization slug is required" })
-    .min(1, { message: "Slug must not be empty" })
-    .max(50, { message: "Slug must not exceed 50 characters" })
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
-      message:
-        "Slug can only contain lowercase letters, numbers, and hyphens, and must not start or end with a hyphen.",
+    .max(MAX_ORGANIZATION_NAME_LENGTH, {
+      message: "Name must not exceed 50 characters",
     }),
+  logo: z
+    .instanceof(File, { message: "Logo is required" })
+    .refine(
+      (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+      "Only .jpg, .png, or .webp files are accepted."
+    )
+    .refine(
+      (file) => file.size <= MAX_FILE_SIZE,
+      `File size must be less than ${MAX_AVATAR_SIZE_MB}MB.`
+    ),
+  extra: z
+    .string()
+    .max(
+      MAX_ORGANIZATION_EXTRA_LENGTH,
+      `Max length of this field is ${MAX_ORGANIZATION_EXTRA_LENGTH} characters`
+    )
+    .optional(),
 });
 
 export type NewOrganizationFormValues = z.infer<

@@ -21,8 +21,8 @@ export const NewOrganizationTemplate = () => {
 
   return (
     <Card className="md:w-96 py-5 px-5">
-      <CardHeader className="gap-4 flex-col items-start">
-        <Typography level="h1" styling="h3">
+      <CardHeader className="block">
+        <Typography level="h1" styling="h3" className="text-center">
           Create new organization
         </Typography>
       </CardHeader>
