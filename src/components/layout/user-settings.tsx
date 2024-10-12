@@ -35,7 +35,7 @@ export const UserSettingsLayout = ({ children }: PropsWithChildren) => {
           </nav>
         </div>
       </aside>
-      {children}
+      <div className="w-full">{children}</div>
     </div>
   );
 };

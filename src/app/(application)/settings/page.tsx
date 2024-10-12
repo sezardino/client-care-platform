@@ -1,5 +1,11 @@
+import { UserProfileSettingsTemplate } from "./components/template";
+
 const Page = () => {
-  return <main>User Settings page</main>;
+  return (
+    <main>
+      <UserProfileSettingsTemplate />
+    </main>
+  );
 };
 
 export default Page;
