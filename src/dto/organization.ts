@@ -9,7 +9,7 @@ const MAX_FILE_SIZE = mbToBites(MAX_AVATAR_SIZE_MB);
 const MAX_ORGANIZATION_NAME_LENGTH = 50;
 const MAX_ORGANIZATION_EXTRA_LENGTH = 50;
 
-export const NewOrganizationFormSchema = z.object({
+export const NewOrganizationDtoSchema = z.object({
   name: z
     .string({
       required_error: "Organization name is required",
@@ -37,6 +37,4 @@ export const NewOrganizationFormSchema = z.object({
     .optional(),
 });
 
-export type NewOrganizationFormValues = z.infer<
-  typeof NewOrganizationFormSchema
->;
+export type NewOrganizationDto = z.infer<typeof NewOrganizationDtoSchema>;

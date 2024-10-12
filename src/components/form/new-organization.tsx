@@ -6,16 +6,16 @@ import { useForm } from "react-hook-form";
 
 import { ACCEPTED_IMAGE_TYPES } from "@/const/base";
 import {
-  NewOrganizationFormSchema,
-  NewOrganizationFormValues,
-} from "@/schemas/organization";
+  NewOrganizationDto,
+  NewOrganizationDtoSchema,
+} from "@/dto/organization";
 import { Avatar, Button, cn, Input, Tooltip } from "@nextui-org/react";
 import { Trash2 } from "lucide-react";
 import { Form, FormField, FormItem, FormMessage } from "../ui/form";
 import { Typography } from "../ui/typography";
 
 type NewOrganizationFormProps = ComponentPropsWithoutRef<"form"> & {
-  onFormSubmit: (values: NewOrganizationFormValues) => void;
+  onFormSubmit: (values: NewOrganizationDto) => void;
 };
 
 const FILE_INPUT_ID = "organization-logo";
@@ -25,11 +25,11 @@ export const NewOrganizationForm = (props: NewOrganizationFormProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
-  const form = useForm<NewOrganizationFormValues>({
-    resolver: zodResolver(NewOrganizationFormSchema),
+  const form = useForm<NewOrganizationDto>({
+    resolver: zodResolver(NewOrganizationDtoSchema),
   });
 
-  const onSubmit = (data: NewOrganizationFormValues) => {
+  const onSubmit = (data: NewOrganizationDto) => {
     onFormSubmit(data);
   };
 

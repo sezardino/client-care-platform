@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  PasswordResetFormSchema,
-  PasswordResetFormValues,
-} from "@/schemas/auth";
+import { PasswordResetDto, PasswordResetDtoSchema } from "@/dto/auth";
 import { ClerkAPIError } from "@clerk/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn, Input } from "@nextui-org/react";
@@ -25,18 +22,18 @@ import {
 import { Typography } from "../ui/typography";
 
 type PasswordResetFormProps = ComponentPropsWithoutRef<"form"> & {
-  onFormSubmit: (values: PasswordResetFormValues) => void;
+  onFormSubmit: (values: PasswordResetDto) => void;
   errors?: ClerkAPIError[];
 };
 
 export const PasswordResetForm = (props: PasswordResetFormProps) => {
   const { onFormSubmit, errors, className, ...rest } = props;
 
-  const form = useForm<PasswordResetFormValues>({
-    resolver: zodResolver(PasswordResetFormSchema),
+  const form = useForm<PasswordResetDto>({
+    resolver: zodResolver(PasswordResetDtoSchema),
   });
 
-  const onSubmit = (data: PasswordResetFormValues) => {
+  const onSubmit = (data: PasswordResetDto) => {
     onFormSubmit(data);
   };
 

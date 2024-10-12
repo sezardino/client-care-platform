@@ -1,13 +1,13 @@
 "use server";
 
 import { ProjectUrls } from "@/const/url";
+import { ImageDtoSchema } from "@/dto/image";
 import { prisma } from "@/libs/prisma";
 import {
   deleteFileFromStorage,
   getFilePublicPath,
   uploadFileToStorage,
 } from "@/libs/supabase/storage";
-import { ImageSchema } from "@/schemas/image";
 import { ServerActionResponse, SuccessResponse } from "@/types/base";
 import { zodValidateAndFormatErrors } from "@/utils/zod";
 import { auth } from "@clerk/nextjs/server";
@@ -27,7 +27,7 @@ export const setProfileAvatar = async (
 
     if (!currentUser) return { message: "No user found" };
 
-    const validationResponse = zodValidateAndFormatErrors(ImageSchema, {
+    const validationResponse = zodValidateAndFormatErrors(ImageDtoSchema, {
       image: formData.get("image"),
     });
 
@@ -113,6 +113,7 @@ const cleanUpAfterUpdateAvatar = async (fileId: string) => {
 
     return { success: true };
   } catch (error) {
+    console.log(error);
     return {
       message: "Something went wrong when try to delete old avatar",
     };

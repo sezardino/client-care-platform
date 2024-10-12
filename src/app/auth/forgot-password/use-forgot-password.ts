@@ -1,8 +1,5 @@
 import { ProjectUrls } from "@/const/url";
-import {
-  PasswordResetFormValues,
-  PasswordResetRequestFormValues,
-} from "@/schemas/auth";
+import { PasswordResetDto, PasswordResetRequestDto } from "@/dto/auth";
 import { useSignIn } from "@clerk/nextjs";
 import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
 import { ClerkAPIError } from "@clerk/types";
@@ -19,7 +16,7 @@ export const useForgotPassword = () => {
 
   // Send the password reset code to the user's email
   const resetPasswordRequest = useCallback(
-    async (values: PasswordResetRequestFormValues) => {
+    async (values: PasswordResetRequestDto) => {
       const { email } = values;
 
       await signIn
@@ -46,7 +43,7 @@ export const useForgotPassword = () => {
   // Upon successful reset, the user will be
   // signed in and redirected to the home page
   const resetPassword = useCallback(
-    async (values: PasswordResetFormValues) => {
+    async (values: PasswordResetDto) => {
       const { code, password } = values;
 
       await signIn

@@ -9,7 +9,7 @@ import {
   editionDifferenceModalStringDifferenceRenderFunction,
 } from "@/components/ui/edition-difference-modal";
 import { Typography } from "@/components/ui/typography";
-import { ProfileFormValues } from "@/schemas/profile";
+import { ProfileDto } from "@/dto/profile";
 import { getChangedFields } from "@/utils/get-changed-fields";
 import { useCallback, useState } from "react";
 import { useDeleteProfileAvatarMutation } from "../hooks/delete-profile-avatar";
@@ -20,7 +20,7 @@ export const UserProfileSettingsTemplate = () => {
   const [isDeleteInitialAvatarModalOpen, setIsDeleteInitialAvatarModalOpen] =
     useState(false);
   const [changedProfileData, setChangedProfileData] =
-    useState<Partial<ProfileFormValues> | null>(null);
+    useState<Partial<ProfileDto> | null>(null);
 
   const { data: currentUserData } = useCurrentUserQuery();
 
@@ -39,7 +39,7 @@ export const UserProfileSettingsTemplate = () => {
   }, [deleteProfileAvatar]);
 
   const submitProfileData = useCallback(
-    (values: ProfileFormValues) => {
+    (values: ProfileDto) => {
       if (!currentUserData) return;
 
       const { firstName, lastName, position } = currentUserData;

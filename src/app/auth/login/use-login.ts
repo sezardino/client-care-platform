@@ -1,5 +1,5 @@
 import { ProjectRoutesUrls } from "@/const/url";
-import { LoginFormValues } from "@/schemas/auth";
+import { LoginDto } from "@/dto/auth";
 import { useSignIn } from "@clerk/nextjs";
 import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
 import { ClerkAPIError } from "@clerk/types";
@@ -15,7 +15,7 @@ export const useLogin = () => {
 
   // // Handle the submission of the sign-in form
   const login = useCallback(
-    async (values: LoginFormValues) => {
+    async (values: LoginDto) => {
       if (!isLoaded) {
         return;
       }

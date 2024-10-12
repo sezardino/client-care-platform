@@ -1,6 +1,6 @@
 import { USER_INVITE_SEARCH_PARAMETER } from "@/const/search-params";
 import { ProjectRoutesUrls } from "@/const/url";
-import { VerificationFormValues } from "@/schemas/auth";
+import { VerificationDto } from "@/dto/auth";
 import { useSignUp } from "@clerk/nextjs";
 import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
 import { ClerkAPIError } from "@clerk/types";
@@ -22,7 +22,7 @@ export const useRegistrationVerification = (args: Args) => {
   const router = useRouter();
 
   const verify = useCallback(
-    async (values: VerificationFormValues) => {
+    async (values: VerificationDto) => {
       if (!isLoaded) return;
 
       if (inviteId && inviteHasErrors)

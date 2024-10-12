@@ -5,24 +5,24 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ComponentPropsWithoutRef } from "react";
 import { useForm } from "react-hook-form";
 
-import { LoginFormSchema, LoginFormValues } from "@/schemas/auth";
+import { LoginDto, LoginDtoSchema } from "@/dto/auth";
 import { cn, Input } from "@nextui-org/react";
 import { Form, FormField } from "../ui/form";
 import { Typography } from "../ui/typography";
 
 type LoginFormProps = ComponentPropsWithoutRef<"form"> & {
-  onFormSubmit: (values: LoginFormValues) => void;
+  onFormSubmit: (values: LoginDto) => void;
   errors?: ClerkAPIError[];
 };
 
 export const LoginForm = (props: LoginFormProps) => {
   const { errors, onFormSubmit, className, ...rest } = props;
 
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(LoginFormSchema),
+  const form = useForm<LoginDto>({
+    resolver: zodResolver(LoginDtoSchema),
   });
 
-  const onSubmit = (data: LoginFormValues) => {
+  const onSubmit = (data: LoginDto) => {
     onFormSubmit(data);
   };
 

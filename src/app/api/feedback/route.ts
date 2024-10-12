@@ -1,6 +1,6 @@
+import { FeedbackWidgetDtoSchema } from "@/dto/feedback";
 import { jwtVerify } from "@/libs/jwt";
 import { prisma } from "@/libs/prisma";
-import { FeedbackWidgetSchema } from "@/schemas/feedback";
 import { JWTWidgetPayload } from "@/types/jwt";
 import { zodValidateAndFormatErrors } from "@/utils/zod";
 import { JsonWebTokenError } from "jsonwebtoken";
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
   const authTokenWithBearer = req.headers.get("Authorization") || "";
 
   const validationResponse = zodValidateAndFormatErrors(
-    FeedbackWidgetSchema,
+    FeedbackWidgetDtoSchema,
     body
   );
 

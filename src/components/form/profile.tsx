@@ -1,6 +1,6 @@
 "use client";
 
-import { ProfileFormSchema, ProfileFormValues } from "@/schemas/profile";
+import { ProfileDto, ProfileDtoSchema } from "@/dto/profile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, cn, Input } from "@nextui-org/react";
 import { ComponentPropsWithoutRef } from "react";
@@ -8,19 +8,19 @@ import { useForm } from "react-hook-form";
 import { Form, FormField, FormItem, FormMessage } from "../ui/form";
 
 type ProfileFormProps = ComponentPropsWithoutRef<"form"> & {
-  onFormSubmit: (values: ProfileFormValues) => void;
-  initialValues: Partial<ProfileFormValues>;
+  onFormSubmit: (values: ProfileDto) => void;
+  initialValues: Partial<ProfileDto>;
 };
 
 export const ProfileForm = (props: ProfileFormProps) => {
   const { initialValues, onFormSubmit, className, ...rest } = props;
 
-  const form = useForm<ProfileFormValues>({
-    resolver: zodResolver(ProfileFormSchema),
+  const form = useForm<ProfileDto>({
+    resolver: zodResolver(ProfileDtoSchema),
     defaultValues: initialValues,
   });
 
-  const onSubmit = (data: ProfileFormValues) => {
+  const onSubmit = (data: ProfileDto) => {
     onFormSubmit(data);
   };
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { ACCEPTED_IMAGE_TYPES } from "@/const/base";
-import { ImageFormValues, ImageSchema } from "@/schemas/image";
+import { ImageDto, ImageDtoSchema } from "@/dto/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Avatar, Button, cn, Spinner, Tooltip } from "@nextui-org/react";
 import { Trash2 } from "lucide-react";
@@ -11,7 +11,7 @@ import { Form } from "../ui/form";
 
 type Props = ComponentPropsWithoutRef<"form"> & {
   initialImageUrl?: string;
-  onFormSubmit: (values: ImageFormValues) => Promise<unknown>;
+  onFormSubmit: (values: ImageDto) => Promise<unknown>;
   onTryToDeleteImage: () => void;
 };
 
@@ -29,8 +29,8 @@ export const ImageForm = (props: Props) => {
     initialImageUrl || null
   );
 
-  const form = useForm<ImageFormValues>({
-    resolver: zodResolver(ImageSchema),
+  const form = useForm<ImageDto>({
+    resolver: zodResolver(ImageDtoSchema),
   });
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {

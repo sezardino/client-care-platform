@@ -1,13 +1,13 @@
+import { CURRENT_USER_QUERY_KEY } from "@/app/hooks/current-user";
 import { ToastInner } from "@/components/ui/toast-inner";
+import { ImageDto } from "@/dto/image";
 import { useServerMutation } from "@/libs/react-query/helpers";
-import { ImageFormValues } from "@/schemas/image";
 import { toast } from "sonner";
 import { setProfileAvatar } from "../actions/set-profile-avatar";
-import { CURRENT_USER_QUERY_KEY } from "@/app/hooks/current-user";
 
 export const useSetProfileAvatarMutation = () => {
   return useServerMutation({
-    mutationFn: async (values: ImageFormValues) => {
+    mutationFn: async (values: ImageDto) => {
       const { image } = values;
 
       const formData = new FormData();

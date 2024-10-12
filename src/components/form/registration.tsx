@@ -1,6 +1,6 @@
 "use client";
 
-import { RegistrationFormSchema, RegistrationFormValues } from "@/schemas/auth";
+import { RegistrationDto, RegistrationDtoSchema } from "@/dto/auth";
 
 import { ClerkAPIError } from "@clerk/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,18 +11,18 @@ import { Form, FormField } from "../ui/form";
 import { Typography } from "../ui/typography";
 
 type RegistrationFormProps = ComponentPropsWithoutRef<"form"> & {
-  onFormSubmit: (values: RegistrationFormValues) => void;
+  onFormSubmit: (values: RegistrationDto) => void;
   errors?: ClerkAPIError[];
 };
 
 export const RegistrationForm = (props: RegistrationFormProps) => {
   const { errors, onFormSubmit, className, ...rest } = props;
 
-  const form = useForm<RegistrationFormValues>({
-    resolver: zodResolver(RegistrationFormSchema),
+  const form = useForm<RegistrationDto>({
+    resolver: zodResolver(RegistrationDtoSchema),
   });
 
-  const onSubmit = (data: RegistrationFormValues) => {
+  const onSubmit = (data: RegistrationDto) => {
     onFormSubmit(data);
   };
 

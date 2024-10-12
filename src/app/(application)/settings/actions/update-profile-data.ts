@@ -1,8 +1,8 @@
 "use server";
 
 import { ProjectUrls } from "@/const/url";
+import { ProfileDtoSchema } from "@/dto/profile";
 import { prisma } from "@/libs/prisma";
-import { ProfileFormSchema } from "@/schemas/profile";
 import { zodValidateAndFormatErrors } from "@/utils/zod";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
@@ -14,10 +14,7 @@ export const updateProfileData = async (data: unknown) => {
 
   if (!userId) return { message: "Unauthorized" };
 
-  const validationResponse = zodValidateAndFormatErrors(
-    ProfileFormSchema,
-    data
-  );
+  const validationResponse = zodValidateAndFormatErrors(ProfileDtoSchema, data);
 
   if (!validationResponse.success) {
     return { message: "Validation error", errors: validationResponse.errors };

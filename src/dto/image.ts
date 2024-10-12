@@ -6,7 +6,7 @@ const mbToBites = (mb: number) => mb * 1024 * 1024;
 const MAX_IMAGE_SIZE_MB = 5;
 const MAX_FILE_SIZE = mbToBites(MAX_IMAGE_SIZE_MB);
 
-export const ImageSchema = z.object({
+export const ImageDtoSchema = z.object({
   image: z
     .instanceof(File, { message: "Invalid input" })
 
@@ -20,4 +20,4 @@ export const ImageSchema = z.object({
     ),
 });
 
-export type ImageFormValues = z.infer<typeof ImageSchema>;
+export type ImageDto = z.infer<typeof ImageDtoSchema>;

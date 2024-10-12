@@ -1,6 +1,6 @@
 import { USER_INVITE_SEARCH_PARAMETER } from "@/const/search-params";
 import { ProjectUrls } from "@/const/url";
-import { RegistrationFormValues } from "@/schemas/auth";
+import { RegistrationDto } from "@/dto/auth";
 import { useSignUp } from "@clerk/nextjs";
 import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
 import { ClerkAPIError } from "@clerk/types";
@@ -22,7 +22,7 @@ export const useRegistration = (args: Args) => {
   const router = useRouter();
 
   // Handle submission of the sign-up form
-  const registration = async (values: RegistrationFormValues) => {
+  const registration = async (values: RegistrationDto) => {
     if (!isLoaded) return;
 
     if (inviteId && inviteHasErrors)

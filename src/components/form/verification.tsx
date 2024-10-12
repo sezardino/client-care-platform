@@ -1,6 +1,6 @@
 "use client";
 
-import { VerificationFormSchema, VerificationFormValues } from "@/schemas/auth";
+import { VerificationDto, VerificationDtoSchema } from "@/dto/auth";
 import { ClerkAPIError } from "@clerk/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@nextui-org/react";
@@ -22,18 +22,18 @@ import {
 import { Typography } from "../ui/typography";
 
 type VerificationFormProps = ComponentPropsWithoutRef<"form"> & {
-  onFormSubmit: (values: VerificationFormValues) => void;
+  onFormSubmit: (values: VerificationDto) => void;
   errors?: ClerkAPIError[];
 };
 
 export const VerificationForm = (props: VerificationFormProps) => {
   const { onFormSubmit, errors, className, ...rest } = props;
 
-  const form = useForm<VerificationFormValues>({
-    resolver: zodResolver(VerificationFormSchema),
+  const form = useForm<VerificationDto>({
+    resolver: zodResolver(VerificationDtoSchema),
   });
 
-  const onSubmit = (data: VerificationFormValues) => {
+  const onSubmit = (data: VerificationDto) => {
     onFormSubmit(data);
   };
 

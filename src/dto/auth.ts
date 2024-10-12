@@ -13,32 +13,32 @@ const baseAuthFields = z.object({
   password: passwordSchema,
 });
 
-export const RegistrationFormSchema = baseAuthFields
+export const RegistrationDtoSchema = baseAuthFields
   .and(z.object({ confirm: passwordSchema }))
   .refine((data) => data.password === data.confirm, {
     message: "Passwords don't match",
     path: ["confirm"],
   });
 
-export const VerificationFormSchema = z.object({
+export const VerificationDtoSchema = z.object({
   code: verificationCodeSchema,
 });
 
-export const PasswordResetFormSchema = z.object({
+export const PasswordResetDtoSchema = z.object({
   password: passwordSchema,
   code: verificationCodeSchema,
 });
 
-export const PasswordResetRequestFormSchema = z.object({
+export const PasswordResetRequestDtoSchema = z.object({
   email: emailSchema,
 });
 
-export const LoginFormSchema = baseAuthFields;
+export const LoginDtoSchema = baseAuthFields;
 
-export type RegistrationFormValues = z.infer<typeof RegistrationFormSchema>;
-export type LoginFormValues = z.infer<typeof LoginFormSchema>;
-export type VerificationFormValues = z.infer<typeof VerificationFormSchema>;
-export type PasswordResetFormValues = z.infer<typeof PasswordResetFormSchema>;
-export type PasswordResetRequestFormValues = z.infer<
-  typeof PasswordResetRequestFormSchema
+export type RegistrationDto = z.infer<typeof RegistrationDtoSchema>;
+export type LoginDto = z.infer<typeof LoginDtoSchema>;
+export type VerificationDto = z.infer<typeof VerificationDtoSchema>;
+export type PasswordResetDto = z.infer<typeof PasswordResetDtoSchema>;
+export type PasswordResetRequestDto = z.infer<
+  typeof PasswordResetRequestDtoSchema
 >;

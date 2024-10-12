@@ -1,11 +1,11 @@
 "use server";
 
+import { NewOrganizationDtoSchema } from "@/dto/organization";
 import { prisma } from "@/libs/prisma";
 import {
   getFilePublicPath,
   uploadFileToStorage,
 } from "@/libs/supabase/storage";
-import { NewOrganizationFormSchema } from "@/schemas/organization";
 import { ServerActionResponse, SuccessResponse } from "@/types/base";
 import { stringToSlug } from "@/utils/string-to-slug";
 import { zodValidateAndFormatErrors } from "@/utils/zod";
@@ -29,7 +29,7 @@ export const createOrganization = async (
   };
 
   const validationResponse = zodValidateAndFormatErrors(
-    NewOrganizationFormSchema,
+    NewOrganizationDtoSchema,
     dataToValidate
   );
 
