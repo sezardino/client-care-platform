@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 const RootLayout = async ({ children }: PropsWithChildren) => {
   const queryClient = getQueryClientForHydration();
-  await queryClient.prefetchQuery(currentUserQuery);
+  const currentUserResponse = await queryClient.fetchQuery(currentUserQuery);
   const dehydratedState = dehydrate(queryClient);
 
   return (
@@ -34,7 +34,11 @@ const RootLayout = async ({ children }: PropsWithChildren) => {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ClientProviders>
-          <HydrationBoundary state={dehydratedState}>
+          <HydrationBoundary
+            state={
+              "message" in currentUserResponse ? undefined : dehydratedState
+            }
+          >
             {children}
           </HydrationBoundary>
         </ClientProviders>

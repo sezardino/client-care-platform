@@ -1,7 +1,7 @@
+import { USER_INVITE_SEARCH_PARAMETER } from "@/const/search-params";
 import { Metadata } from "next";
 import { checkUserInvite } from "../actions/check-invition";
 import { RegistrationTemplate } from "./components/template";
-import { USER_INVITE_SEARCH_PARAMETER } from "@/const/search-params";
 
 export const metadata: Metadata = { title: "Registration" };
 

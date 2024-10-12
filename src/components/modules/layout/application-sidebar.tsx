@@ -58,7 +58,7 @@ export const ApplicationSidebar = (props: ApplicationSidebarProps) => {
 
   const footerLinks = [
     { label: "Back to landing", href: ProjectUrls.home, icon: Home },
-    { label: "User Settings", href: ProjectUrls.settings, icon: Settings },
+    { label: "User Settings", href: ProjectUrls.userSettings, icon: Settings },
     { label: "Log Out", onClick: logout, icon: LogOut },
   ];
 

@@ -1,27 +1,21 @@
 "use server";
 
 import { prisma } from "@/libs/prisma";
-import { ServerActionResponse } from "@/types/base";
-import { CurrentUserData } from "@/types/user";
 import { auth } from "@clerk/nextjs/server";
 
-export const getCurrentUserData = async (): Promise<
-  ServerActionResponse<CurrentUserData>
-> => {
+export const getCurrentUserProfile = async () => {
   const { userId } = auth();
 
-  if (!userId) return { message: "User not found" };
+  if (!userId) return { message: "Unauthorized" };
 
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: {
-        email: true,
-        avatar: true,
+        position: true,
         firstName: true,
         lastName: true,
-        organizationId: true,
-        position: true,
+        avatar: true,
       },
     });
 
@@ -35,6 +29,8 @@ export const getCurrentUserData = async (): Promise<
     };
   } catch (error) {
     console.log("error", error);
-    return { message: "There was error when try to get current user data" };
+    return {
+      message: "Something went wrong when try to get current user profile",
+    };
   }
 };

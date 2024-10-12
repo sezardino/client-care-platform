@@ -15,11 +15,11 @@ enum UserRoles {
 }
 
 model User {
-  id        String  @id @unique @default(cuid())
-  email     String  @unique
-  firstName String? @map("first_name")
-  lastName  String? @map("last_name")
-  position  String?
+  id        String @id @unique @default(cuid())
+  email     String @unique
+  firstName String @default("") @map("first_name")
+  lastName  String @default("") @map("last_name")
+  position  String @default("")
 
   inviteId String? @default(cuid()) @map("invite_id")
 
@@ -58,7 +58,7 @@ model Organization {
   slug String @unique
 
   name  String
-  extra String?
+  extra String @default("")
 
   members User[] @relation("organization-members")
   ownerId String @unique @map("owner_id")
@@ -77,12 +77,12 @@ model Organization {
 }
 
 model Project {
-  id    String  @id @unique @default(cuid())
+  id    String @id @unique @default(cuid())
   slug  String
   name  String
-  extra String?
+  extra String @default("")
 
-  description String?
+  description String @default("")
 
   organizationId String       @map("organization_id")
   organization   Organization @relation(fields: [organizationId], references: [id])
