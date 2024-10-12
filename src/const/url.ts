@@ -19,5 +19,5 @@ export const ProjectUrls = {
 };
 
 export const ProjectRoutesUrls = {
-  auth: "api/auth",
+  auth: "/api/auth",
 };

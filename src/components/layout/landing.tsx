@@ -1,3 +1,5 @@
+"use client";
+
 import { useCurrentUserQuery } from "@/app/hooks/current-user";
 import { PropsWithChildren } from "react";
 import { LandingFooter } from "../modules/layout/landing-footer";

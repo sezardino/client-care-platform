@@ -30,13 +30,18 @@ export async function GET(req: NextRequest) {
           },
         });
 
-        return redirect(ProjectUrls.newOrganization);
+        return NextResponse.redirect(
+          new URL(ProjectUrls.newOrganization, req.url)
+        );
       }
 
-      if (!user.organizationId) return redirect(ProjectUrls.newOrganization);
+      if (!user.organizationId)
+        return NextResponse.redirect(
+          new URL(ProjectUrls.newOrganization, req.url)
+        );
     } catch (error) {
       console.log(error);
-      return redirect(ProjectUrls.registration);
+      return NextResponse.redirect(new URL(ProjectUrls.registration, req.url));
     }
   }
 

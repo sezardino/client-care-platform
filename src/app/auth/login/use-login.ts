@@ -1,3 +1,4 @@
+import { ProjectRoutesUrls } from "@/const/url";
 import { LoginFormValues } from "@/schemas/auth";
 import { useSignIn } from "@clerk/nextjs";
 import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
@@ -35,7 +36,7 @@ export const useLogin = () => {
         if (signInAttempt.status === "complete") {
           await setActive({ session: signInAttempt.createdSessionId });
           toast("You are logged successfully");
-          router.push("/api/auth/new-user");
+          router.push(ProjectRoutesUrls.auth);
         } else {
           // If the status is not complete, check why. User may need to
           // complete further steps.
