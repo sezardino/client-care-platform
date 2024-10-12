@@ -2,10 +2,8 @@
 
 import { NewOrganizationDtoSchema } from "@/dto/organization";
 import { prisma } from "@/libs/prisma";
-import {
-  getFilePublicPath,
-  uploadFileToStorage,
-} from "@/libs/supabase/storage";
+import { uploadOrganizationLogoToStorage } from "@/libs/supabase/handlers";
+import { getFilePublicPath } from "@/libs/supabase/storage";
 import { ServerActionResponse, SuccessResponse } from "@/types/base";
 import { stringToSlug } from "@/utils/string-to-slug";
 import { zodValidateAndFormatErrors } from "@/utils/zod";
@@ -64,9 +62,9 @@ export const createOrganization = async (
       select: { id: true },
     });
 
-    const uploadResponse = await uploadFileToStorage(
+    const uploadResponse = await uploadOrganizationLogoToStorage(
       logo,
-      `organization/${newOrganization.id}/logo`
+      newOrganization.id
     );
 
     if (!uploadResponse || uploadResponse.error) {

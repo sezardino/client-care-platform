@@ -3,10 +3,10 @@
 import { ProjectUrls } from "@/const/url";
 import { ImageDtoSchema } from "@/dto/image";
 import { prisma } from "@/libs/prisma";
+import { uploadUserAvatarToStorage } from "@/libs/supabase/handlers";
 import {
   deleteFileFromStorage,
   getFilePublicPath,
-  uploadFileToStorage,
 } from "@/libs/supabase/storage";
 import { ServerActionResponse, SuccessResponse } from "@/types/base";
 import { zodValidateAndFormatErrors } from "@/utils/zod";
@@ -38,9 +38,9 @@ export const setProfileAvatar = async (
     const { data } = validationResponse;
     const image = data.image as File;
 
-    const uploadResponse = await uploadFileToStorage(
+    const uploadResponse = await uploadUserAvatarToStorage(
       image,
-      `${currentUser.id}/avatar`
+      `${currentUser.id}`
     );
 
     if (!uploadResponse || uploadResponse.error)
