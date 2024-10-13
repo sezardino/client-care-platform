@@ -77,10 +77,10 @@ model Organization {
 }
 
 model Project {
-  id    String @id @unique @default(cuid())
-  slug  String
-  name  String
-  extra String @default("")
+  id   String @id @unique @default(cuid())
+  slug String
+  name String
+  url  String @default("")
 
   description String @default("")
 

@@ -1,9 +1,7 @@
 "use server";
 
-import {
-  CLEKR_ID_START_WITH,
-  MAX_ORGANIZATION_MEMBERS_COUNT,
-} from "@/const/base";
+import { CLERK_ID_START_WITH } from "@/const/base";
+import { MAX_ORGANIZATION_MEMBERS_COUNT } from "@/const/limits";
 import { ProjectUrls } from "@/const/url";
 import { prisma } from "@/libs/prisma";
 import { ServerActionResponse, SuccessResponse } from "@/types/base";
@@ -44,7 +42,7 @@ export const checkUserInvite = async (
         message: `Organization can only have ${MAX_ORGANIZATION_MEMBERS_COUNT} members, contact with your supervisor`,
       };
 
-    if (user.id.startsWith(CLEKR_ID_START_WITH))
+    if (user.id.startsWith(CLERK_ID_START_WITH))
       return { message: `This user already accept invite` };
 
     return { success: true };
