@@ -2,7 +2,7 @@
 
 import { RegistrationDto, RegistrationDtoSchema } from "@/dto/auth";
 
-import { ClerkAPIError } from "@clerk/types";
+import { CustomError } from "@/types/base";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn, Input } from "@nextui-org/react";
 import { ComponentPropsWithoutRef } from "react";
@@ -12,7 +12,7 @@ import { Typography } from "../ui/typography";
 
 type RegistrationFormProps = ComponentPropsWithoutRef<"form"> & {
   onFormSubmit: (values: RegistrationDto) => void;
-  errors?: ClerkAPIError[];
+  errors?: CustomError[];
 };
 
 export const RegistrationForm = (props: RegistrationFormProps) => {
@@ -69,10 +69,10 @@ export const RegistrationForm = (props: RegistrationFormProps) => {
 
         {errors && (
           <ul>
-            {errors.map((el, index) => (
+            {errors.map((error, index) => (
               <li key={index}>
                 <Typography level="span" className="text-red-400">
-                  {el.longMessage}
+                  {error.message}
                 </Typography>
               </li>
             ))}

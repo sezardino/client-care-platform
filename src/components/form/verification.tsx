@@ -1,7 +1,7 @@
 "use client";
 
 import { VerificationDto, VerificationDtoSchema } from "@/dto/auth";
-import { ClerkAPIError } from "@clerk/types";
+import { CustomError } from "@/types/base";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@nextui-org/react";
 import { ComponentPropsWithoutRef } from "react";
@@ -23,7 +23,7 @@ import { Typography } from "../ui/typography";
 
 type VerificationFormProps = ComponentPropsWithoutRef<"form"> & {
   onFormSubmit: (values: VerificationDto) => void;
-  errors?: ClerkAPIError[];
+  errors?: CustomError[];
 };
 
 export const VerificationForm = (props: VerificationFormProps) => {
@@ -71,10 +71,10 @@ export const VerificationForm = (props: VerificationFormProps) => {
 
         {errors && (
           <ul>
-            {errors.map((el, index) => (
+            {errors.map((error, index) => (
               <li key={index}>
                 <Typography level="span" className="text-red-400">
-                  {el.longMessage}
+                  {error.message}
                 </Typography>
               </li>
             ))}

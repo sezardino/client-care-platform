@@ -1,6 +1,8 @@
 import { ZodFormatError } from "@/utils/zod";
 
-export type ServerActionError = { message: string; errors?: ZodFormatError[] };
+export type CustomError = { message: string };
+
+export type ServerActionError = CustomError & { errors?: ZodFormatError[] };
 
 export type ServerActionResponse<T = void> = T | ServerActionError;
 

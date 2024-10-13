@@ -1,10 +1,10 @@
 "use client";
 
 import { RegistrationForm } from "@/components/form/registration";
-
+import { VerificationForm } from "@/components/form/verification";
 import { Typography } from "@/components/ui/typography";
-
 import { ProjectUrls } from "@/const/url";
+import { RegistrationDto } from "@/dto/auth";
 import {
   Button,
   Card,
@@ -16,22 +16,47 @@ import {
 } from "@nextui-org/react";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import NextLink from "next/link";
-import { useRegistration } from "../use-registration";
-
-const REGISTRATION_FORM_ID = "registration-form-id";
+import { useState } from "react";
+import { toast } from "sonner";
+import { useRegistrationMutation } from "../hooks/registration";
+import { useRegistrationVerificationMutation } from "../hooks/registration-verification";
 
 type Props = {
   inviteId?: string;
   inviteValidationError?: string;
 };
 
+const FORM_ID = "registration-form-id";
+
 export const RegistrationTemplate = (props: Props) => {
   const { inviteValidationError, inviteId } = props;
+  const [step, setStep] = useState<"idle" | "verification">("idle");
 
-  const { errors, registration, isLoading } = useRegistration({
-    inviteHasErrors: !!inviteValidationError,
+  const {
+    mutateAsync: registration,
+    error: registrationErrors,
+    isPending: isRegistrationPending,
+  } = useRegistrationMutation();
+  const {
+    mutateAsync: registrationVerification,
+    error: registrationVerificationErrors,
+    isPending: isRegistrationVerificationPending,
+  } = useRegistrationVerificationMutation({
     inviteId,
   });
+
+  const registrationHandler = async (values: RegistrationDto) => {
+    if (inviteValidationError) return toast.error(inviteValidationError);
+
+    try {
+      await registration(values);
+      setStep("verification");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const isLoading = isRegistrationPending || isRegistrationVerificationPending;
 
   return (
     <Card className="md:w-96 py-5">
@@ -39,10 +64,23 @@ export const RegistrationTemplate = (props: Props) => {
         <Typography
           level="h1"
           styling="h3"
-          className={cn(inviteValidationError && "sr-only")}
+          className={cn(
+            (inviteValidationError || step === "verification") && "sr-only"
+          )}
         >
           Create new account
         </Typography>
+
+        {step === "verification" && (
+          <div className="flex flex-col">
+            <Typography level="h2" styling="h3">
+              Verification Code
+            </Typography>
+            <Typography level="p" styling="small">
+              Check your email, for verification code
+            </Typography>
+          </div>
+        )}
 
         {inviteValidationError && (
           <div className="flex flex-col gap-5 mt-5">
@@ -69,38 +107,59 @@ export const RegistrationTemplate = (props: Props) => {
           Back to Home
         </Link>
       </CardHeader>
+
       {!inviteValidationError && (
-        <CardBody className="mt-2">
-          <RegistrationForm
-            id={REGISTRATION_FORM_ID}
-            onFormSubmit={registration}
-            errors={errors}
-          />
-        </CardBody>
+        <>
+          <CardBody className="mt-2">
+            {step === "idle" && (
+              <RegistrationForm
+                id={FORM_ID}
+                onFormSubmit={registrationHandler}
+                errors={
+                  registrationErrors && "errors" in registrationErrors
+                    ? registrationErrors.errors
+                    : undefined
+                }
+              />
+            )}
+
+            {step === "verification" && (
+              <VerificationForm
+                id={FORM_ID}
+                onFormSubmit={registrationVerification}
+                errors={
+                  registrationVerificationErrors &&
+                  "errors" in registrationVerificationErrors
+                    ? registrationVerificationErrors.errors
+                    : undefined
+                }
+              />
+            )}
+          </CardBody>
+
+          <CardFooter className="grid grid-cols-1 gap-3 items-start">
+            <Button
+              form={FORM_ID}
+              type="submit"
+              color="primary"
+              disabled={isLoading}
+              className="w-full"
+            >
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {step === "idle" ? "Register" : "Verify"}
+            </Button>
+
+            {step === "idle" && (
+              <Typography level="p" styling="small" className="text-center">
+                Already have an account?{" "}
+                <Link as={NextLink} size="sm" href={ProjectUrls.login}>
+                  Login
+                </Link>
+              </Typography>
+            )}
+          </CardFooter>
+        </>
       )}
-
-      <CardFooter className="grid grid-cols-1 gap-3 items-start">
-        {!inviteValidationError && (
-          <Button
-            form={REGISTRATION_FORM_ID}
-            disabled={isLoading}
-            color="primary"
-            type="submit"
-            size="sm"
-            className="w-full"
-          >
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Register
-          </Button>
-        )}
-
-        <Typography level="p" styling="small" className="text-center">
-          Already have an account?{" "}
-          <Link as={NextLink} size="sm" href={ProjectUrls.login}>
-            Login
-          </Link>
-        </Typography>
-      </CardFooter>
     </Card>
   );
 };
