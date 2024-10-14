@@ -14,6 +14,8 @@ export const ProjectUrls = {
   projects: "/organization/projects",
   settings: "/organization/settings",
 
+  project: (id: string) => `/organization/projects/${id}`,
+
   userSettings: "/settings",
 };
 

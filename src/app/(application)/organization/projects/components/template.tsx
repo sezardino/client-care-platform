@@ -1,71 +1,39 @@
 "use client";
 
-import { AlertModal } from "@/components/ui/alert-modal";
+import { CreateProjectModal } from "@/components/modules/projects/create-project-modal";
+import { ProjectCard } from "@/components/modules/projects/project-card";
 import { Typography } from "@/components/ui/typography";
 import { MAX_ORGANIZATION_PROJECTS_COUNT } from "@/const/limits";
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Divider,
-  Link,
-} from "@nextui-org/react";
-import { ArrowRight, PlusCircle } from "lucide-react";
-import Image from "next/image";
-import NextLink from "next/link";
-import { useState } from "react";
-
-const mockData = [
-  {
-    id: "1",
-    name: "Introduction to JavaScript",
-    slug: "introduction-to-javascript",
-    logoUrl: "https://via.placeholder.com/1200x600",
-    url: "example.comscript",
-    description:
-      "Learn the basics of JavaScript, the most popular programming language for web development.",
-  },
-  {
-    id: "2",
-    name: "Advanced CSS Techniques",
-    slug: "advanced-css-techniques",
-    logoUrl: "https://via.placeholder.com/1200x600",
-    url: "example.comues",
-    description:
-      "Explore advanced CSS features and techniques to create visually stunning web pages.",
-  },
-  {
-    id: "3",
-    name: "Building REST APIs with Node.js",
-    slug: "building-rest-apis-with-nodejs",
-    logoUrl: "https://via.placeholder.com/1200x600",
-    url: "example.comith-nodejs",
-    description:
-      "Master the art of building RESTful APIs using Node.js and Express framework.",
-  },
-  {
-    id: "4",
-    name: "Understanding TypeScript",
-    slug: "understanding-typescript",
-    logoUrl: "https://via.placeholder.com/1200x600",
-    url: "example.comript",
-  },
-  {
-    id: "5",
-    name: "Next.js for Beginners",
-    slug: "nextjs-for-beginners",
-    logoUrl: "https://via.placeholder.com/1200x600",
-    url: "example.com",
-    description:
-      "Learn the fundamentals of Next.js, a React framework for building fast and scalable web applications.",
-  },
-];
+import { NewProjectDto } from "@/dto/project";
+import { Card, CardBody, Tooltip } from "@nextui-org/react";
+import { PlusCircle } from "lucide-react";
+import { useCallback, useState } from "react";
+import { useCreateNewProjectMutation } from "../hooks/create-new-project";
+import { useOrganizationProjectsQuery } from "../hooks/projects";
 
 export const OrganizationProjectsTemplate = () => {
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
 
-  const projects = mockData;
+  const { data: projectsResponse, isLoading: isProjectsLoading } =
+    useOrganizationProjectsQuery();
+  const { mutateAsync: createNewProject } = useCreateNewProjectMutation();
+
+  const canCreateMoreProjects =
+    !isProjectsLoading &&
+    (projectsResponse?.projects.length || MAX_ORGANIZATION_PROJECTS_COUNT) >=
+      MAX_ORGANIZATION_PROJECTS_COUNT;
+
+  const createNewProjectHandler = useCallback(
+    async (values: NewProjectDto) => {
+      try {
+        await createNewProject(values);
+        setIsNewProjectModalOpen(false);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [createNewProject]
+  );
 
   return (
     <>
@@ -82,49 +50,30 @@ export const OrganizationProjectsTemplate = () => {
 
       <section className="mt-8">
         <ul className="grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
-          {projects.map((project) => (
-            <Card key={project.id} as="li" className="">
-              <CardHeader className="flex gap-3">
-                <Image
-                  alt={project.name}
-                  height={40}
-                  src={project.logoUrl}
-                  width={40}
-                  className="aspect-square object-cover"
-                />
-                <div className="flex flex-col">
-                  <p className="text-md">{project.name}</p>
-                  <p className="text-small text-default-500">{project.url}</p>
-                </div>
-              </CardHeader>
-              <Divider />
-              <CardBody>
-                {project.description ? (
-                  <Typography styling="xs">{project.description}</Typography>
-                ) : (
-                  <Typography styling="xxs" className="opacity-50">
-                    Description not provided{" "}
-                  </Typography>
-                )}
-              </CardBody>
-              <Divider />
-              <CardFooter className="flex items-center justify-between">
-                <Link as={NextLink} size="sm" href="#">
-                  To project
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </CardFooter>
-            </Card>
+          {projectsResponse?.projects.map((project) => (
+            <li key={project.id}>
+              <ProjectCard
+                id={project.id}
+                name={project.name}
+                url={project.url}
+                logoUrl={project.logoUrl}
+                description={project.description}
+              />
+            </li>
           ))}
 
-          <li>
+          <Tooltip
+            isDisabled={!canCreateMoreProjects}
+            content={`You can create only ${MAX_ORGANIZATION_PROJECTS_COUNT} projects.`}
+          >
             <Card
               as="button"
               isBlurred
               isHoverable
               isPressable
-              isDisabled={projects.length >= MAX_ORGANIZATION_PROJECTS_COUNT}
-              className="border-none bg-background/60 dark:bg-default-100/50 w-full h-full"
+              isDisabled={canCreateMoreProjects}
+              disabled={canCreateMoreProjects}
+              className="border-none bg-background/60 dark:bg-default-100/50 w-full h-full min-h-40"
               shadow="sm"
               onClick={() => setIsNewProjectModalOpen(true)}
             >
@@ -135,19 +84,14 @@ export const OrganizationProjectsTemplate = () => {
                 </Typography>
               </CardBody>
             </Card>
-          </li>
+          </Tooltip>
         </ul>
       </section>
 
-      {/* TEMP modal */}
-      <AlertModal
+      <CreateProjectModal
         isOpen={isNewProjectModalOpen}
-        onConfirm={() => {}}
         onClose={() => setIsNewProjectModalOpen(false)}
-        title="Create new modal"
-        description="Field needed fields to create new project"
-        cancel="Cancel"
-        confirm="Create new project"
+        onFormSubmit={createNewProjectHandler}
       />
     </>
   );

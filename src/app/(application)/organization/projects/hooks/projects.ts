@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useServerQuery } from "@/libs/react-query/helpers";
 import { getOrganizationProjects } from "../actions/projects";
 
 export const ORGANIZATION_PROJECTS_QUERY_KEY =
@@ -10,4 +10,4 @@ export const organizationProjectsQuery = {
 };
 
 export const useOrganizationProjectsQuery = () =>
-  useQuery(organizationProjectsQuery);
+  useServerQuery(organizationProjectsQuery);

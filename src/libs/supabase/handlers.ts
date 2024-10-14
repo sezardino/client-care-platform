@@ -7,3 +7,13 @@ export const uploadOrganizationLogoToStorage = async (
   logo: File,
   organizationId: string
 ) => uploadFileToStorage(logo, `organization/${organizationId}/logo`);
+
+export const uploadProjectLogoToStorage = async (
+  logo: File,
+  organizationId: string,
+  projectId: string
+) =>
+  uploadFileToStorage(
+    logo,
+    `organization/${organizationId}/projects/${projectId}`
+  );
